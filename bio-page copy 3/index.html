@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BIO page</title>
+  <meta name="description" content="Bio page k přijímačkám – O mně, Výuka, Projekty, Kontakt." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+  <main class="page" id="top">
+
+    <!-- =========================
+         SECTION 1: INTRO / HERO
+         ========================= -->
+    <section id="intro" class="section" aria-label="Úvod">
+      <div class="container">
+        <div class="hero glass reveal">
+          <div class="hero__text">
+            <h1>Jan Konrád</h1>
+            <p>
+              Bio page k přijímačkám na VŠ. Stručně: kdo jsem, čím se zabývám, jak učím a co stavím za projekty.
+              (Grafiku dodáš z Adobe — tady je layout a interakce.)
+            </p>
+
+            <div class="hero__meta" aria-label="Rychlé štítky">
+              <span class="pill"><span class="dot"></span> ICT / výuka</span>
+              <span class="pill"><span class="dot" style="background:var(--accent-2); box-shadow:0 0 0 4px rgba(181,255,163,0.14)"></span> Web / hry / design</span>
+              <span class="pill"><span class="dot" style="background:#ffd08b; box-shadow:0 0 0 4px rgba(255,208,139,0.14)"></span> Portfolio</span>
+            </div>
+
+            <div class="hero__actions">
+              <button class="btn" type="button" data-jump="#hub">Přejít na profil</button>
+              <button class="btn" type="button" data-jump="#end">Kontakt</button>
+            </div>
+          </div>
+
+          <div class="hero__photo">
+            <figure class="photoFrame">
+              <!-- VYMĚŇ: tvoje fotka -->
+              <img src="./assets/profile.jpg" alt="Profilová fotografie" loading="lazy" />
+            </figure>
+            <div class="photoHint">Foto: ./assets/profile.jpg</div>
+          </div>
+        </div>
+
+        <div class="scrollCue" role="button" tabindex="0" data-jump="#hub" aria-label="Scroll na další sekci">
+          <span>Scroll ↓</span><span class="chev" aria-hidden="true"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         SECTION 2: HUB (Accordion)
+         ========================= -->
+    <section id="hub" class="section" aria-label="Profil – O mně, Výuka, Projekty">
+      <div class="container">
+        <div class="hubCard glass reveal">
+          <header class="hubHeader">
+            <div>
+              <h2>Profil</h2>
+              <p>
+                Tři bloky pod sebou. Kliknutím se blok rozbalí směrem dolů.
+                V “O mně” je horizontální pásmo s obrázky a animacemi.
+              </p>
+            </div>
+            <div class="hubActions">
+              <button class="btn" type="button" id="btnCollapseAll" disabled>Sbalit vše</button>
+              <button class="btn" type="button" data-jump="#end">Na kontakt</button>
+            </div>
+          </header>
+
+          <div class="accordion" id="accordion" aria-label="Sekce profilu">
+
+            <!-- O MNĚ -->
+            <article class="accItem" data-section="about">
+              <button class="accHead" type="button" aria-expanded="false">
+                <div class="accKicker">
+                  <span class="badge"><span class="icon"></span> BIO</span>
+                  <span class="accKickerText">vizuálně + rychle</span>
+                </div>
+                <div class="accTitleRow">
+                  <h3>O mně</h3>
+                  <span class="accChevron" aria-hidden="true"></span>
+                </div>
+                <p class="accSummary">Krátký kontext + horizontální pásmo s highlighty.</p>
+              </button>
+              <div class="accBody" aria-hidden="true">
+                <div class="accBodyInner" data-slot="content"></div>
+              </div>
+            </article>
+
+            <!-- VÝUKA -->
+            <article class="accItem" data-section="teaching">
+              <button class="accHead" type="button" aria-expanded="false">
+                <div class="accKicker">
+                  <span class="badge"><span class="icon icon--2"></span> EDU</span>
+                  <span class="accKickerText">jak učím</span>
+                </div>
+                <div class="accTitleRow">
+                  <h3>Výuka</h3>
+                  <span class="accChevron" aria-hidden="true"></span>
+                </div>
+                <p class="accSummary">Metodika, témata, ukázky materiálů.</p>
+              </button>
+              <div class="accBody" aria-hidden="true">
+                <div class="accBodyInner" data-slot="content"></div>
+              </div>
+            </article>
+
+            <!-- PROJEKTY -->
+            <article class="accItem" data-section="projects">
+              <button class="accHead" type="button" aria-expanded="false">
+                <div class="accKicker">
+                  <span class="badge"><span class="icon icon--3"></span> DEV</span>
+                  <span class="accKickerText">co jsem postavil</span>
+                </div>
+                <div class="accTitleRow">
+                  <h3>Projekty</h3>
+                  <span class="accChevron" aria-hidden="true"></span>
+                </div>
+                <p class="accSummary">Výběr projektů + role + stack + výsledek.</p>
+              </button>
+              <div class="accBody" aria-hidden="true">
+                <div class="accBodyInner" data-slot="content"></div>
+              </div>
+            </article>
+
+          </div>
+
+          <!-- Sentinel: když dojedeš dolů v hubu, jemně tě to “hodí” na kontakt -->
+          <div id="endSentinel" aria-hidden="true"></div>
+
+          <!-- =========================
+               TEMPLATES (obsah)
+               ========================= -->
+          <template id="tpl-about">
+            <div class="detailBlock">
+              <h4>Rychlý profil</h4>
+              <ul>
+                <li><b>Zaměření:</b> web / výuka / kreativní projekty</li>
+                <li><b>Silné stránky:</b> UI layout, systémové myšlení, výukové materiály</li>
+                <li><b>Cíl:</b> jasná prezentace pro přijímačky</li>
+              </ul>
+            </div>
+
+            <!-- HORIZONTÁLNÍ PÁSMO -->
+            <div class="aboutBand" aria-label="Pásmo O mně">
+              <div class="bandTop">
+                <div class="bandTitle">
+                  <span class="badge"><span class="icon"></span> Highlights</span>
+                  <span class="bandHint">Kolečko myši = scroll do strany</span>
+                </div>
+                <div class="bandDots" aria-hidden="true"></div>
+              </div>
+
+              <div class="bandTrack" tabindex="0" aria-label="Horizontální pásmo s kartami">
+                <article class="bandCard">
+                  <div class="bandImg">
+                    <img src="./assets/about/01.jpg" alt="Gaming / game design">
+                  </div>
+                  <div class="bandText">
+                    <h5>Game design</h5>
+                    <p>Karetní systém, prototypy, balanc, UI iterace.</p>
+                  </div>
+                </article>
+
+                <article class="bandCard">
+                  <div class="bandImg">
+                    <img src="./assets/about/02.jpg" alt="Výuka ICT">
+                  </div>
+                  <div class="bandText">
+                    <h5>Výuka ICT</h5>
+                    <p>Šablony lekcí, simulace, testy, praxe krok za krokem.</p>
+                  </div>
+                </article>
+
+                <article class="bandCard">
+                  <div class="bandImg">
+                    <img src="./assets/about/03.jpg" alt="Design a grafika">
+                  </div>
+                  <div class="bandText">
+                    <h5>Design / grafika</h5>
+                    <p>Adobe workflow, UI kompozice, čistý moderní styl.</p>
+                  </div>
+                </article>
+
+                <article class="bandCard">
+                  <div class="bandImg">
+                    <img src="./assets/about/04.jpg" alt="Projekty">
+                  </div>
+                  <div class="bandText">
+                    <h5>Projekty</h5>
+                    <p>Weby, hry, prototypy – výběr toho nejlepšího.</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <div class="detailBlock">
+              <h4>Rychlé odkazy</h4>
+              <ul>
+                <li>GitHub / portfolio (doplň)</li>
+                <li>Instagram / Behance (doplň)</li>
+                <li>CV PDF (doplň)</li>
+              </ul>
+            </div>
+          </template>
+
+          <template id="tpl-teaching">
+            <div class="detailBlock">
+              <h4>Jak učím</h4>
+              <ul>
+                <li>krok za krokem, důraz na pochopení principů</li>
+                <li>praktické úkoly + mini-projekty</li>
+                <li>konzistentní šablony výstupů</li>
+              </ul>
+            </div>
+            <div class="detailBlock">
+              <h4>Témata</h4>
+              <ul>
+                <li>Python (if/while/for, funkce, práce s daty)</li>
+                <li>Web (HTML/CSS/JS – layout, UI, interakce)</li>
+                <li>Grafika (PhotoPea/Adobe workflow, export)</li>
+              </ul>
+            </div>
+            <div class="detailBlock">
+              <h4>Ukázky</h4>
+              <p>Doplň 2–5 konkrétních odkazů na nejlepší lekce / repo.</p>
+            </div>
+          </template>
+
+          <template id="tpl-projects">
+            <div class="detailBlock">
+              <h4>Výběr projektů</h4>
+              <ul>
+                <li><b>Projekt A:</b> popis + role + stack + odkaz</li>
+                <li><b>Projekt B:</b> popis + role + stack + odkaz</li>
+                <li><b>Projekt C:</b> popis + role + stack + odkaz</li>
+              </ul>
+            </div>
+            <div class="detailBlock">
+              <h4>Co je pro VŠ podstatné</h4>
+              <ul>
+                <li>samostatná realizace + iterace</li>
+                <li>funkční prototypy</li>
+                <li>jasný popis přínosu a rozhodnutí</li>
+              </ul>
+            </div>
+          </template>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         SECTION 3: END / CONTACT
+         ========================= -->
+    <section id="end" class="section" aria-label="Kontakt">
+      <div class="container">
+        <footer class="footerCard glass reveal" id="siteFooter">
+          <h3>Kontakt</h3>
+          <p>Sem dej ultra stručně kontakt. Sekce se při dojetí automaticky dosnapuje a vyjede.</p>
+
+          <div class="cols">
+            <div>
+              <div class="kv">
+                <div><b>Jméno:</b> Jan Konrád</div>
+                <div><b>E-mail:</b> <a href="mailto:jan@example.com">jan@example.com</a></div>
+                <div><b>Město:</b> (doplň)</div>
+              </div>
+
+              <div class="footerActions">
+                <a class="btn" href="mailto:jan@example.com">Napsat e-mail</a>
+                <a class="btn" href="#" target="_blank" rel="noopener">GitHub / Portfolio</a>
+              </div>
+            </div>
+
+            <div>
+              <div class="detailBlock detailBlock--tight">
+                <h4>Credits</h4>
+                <p>Web vytvořen: <b>Jan Konrád</b> • Vanilla HTML/CSS/JS • (doplň datum/verzi)</p>
+              </div>
+              <p class="muted">Tip: 2–3 nejlepší ukázky + 1 věta “moje role / výsledek / stack”.</p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
