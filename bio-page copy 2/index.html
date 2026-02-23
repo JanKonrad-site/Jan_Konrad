@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BIO page – Jan Konrád</title>
+  <meta name="description" content="Bio page k přijímačkám na VŠ – profil, výuka, projekty, kontakt." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+  <main class="page" id="top">
+
+    <!-- =========================
+         SECTION 1: INTRO
+         ========================= -->
+    <section id="intro" class="section section--intro" aria-label="Úvod">
+      <div class="container">
+        <div class="hero glass reveal">
+          <div class="hero__text">
+            <h1>Jan Konrád</h1>
+            <p>
+              Bio page k přijímačkám na VŠ. Stručně: kdo jsem, čím se zabývám, jak učím a co stavím za projekty.
+              Grafiku si dodáš z Adobe — tady je layout, paleta a chování.
+            </p>
+
+            <div class="hero__meta" aria-label="Rychlé štítky">
+              <span class="pill"><span class="dot"></span> ICT / výuka</span>
+              <span class="pill"><span class="dot dot--2"></span> Web / hry / grafika</span>
+              <span class="pill"><span class="dot dot--3"></span> Portfolio / projekty</span>
+            </div>
+
+            <div class="hero__actions">
+              <button class="btn" type="button" data-jump="#hub">Přejít na profil</button>
+              <button class="btn" type="button" data-jump="#end">Kontakt</button>
+            </div>
+          </div>
+
+          <div class="hero__photo">
+            <figure class="photoFrame" aria-label="Profilová fotografie">
+              <!-- VYMĚŇ: ./assets/profile.jpg -->
+              <img src="./assets/profile.jpg" alt="Profilová fotografie" loading="lazy" />
+            </figure>
+            <div class="photoHint">Foto je lokální asset (./assets/profile.jpg).</div>
+          </div>
+        </div>
+
+        <div class="scrollCue" role="button" tabindex="0" data-jump="#hub" aria-label="Scroll na další sekci">
+          <span>Scroll ↓</span><span class="chev" aria-hidden="true"></span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =========================
+         SECTION 2: HUB (Accordion)
+         ========================= -->
+    <section id="hub" class="section section--hub" aria-label="Profil – O mně, Výuka, Projekty">
+      <div class="container">
+        <div class="hubCard glass reveal">
+          <header class="hubHeader">
+            <div>
+              <h2>Profil</h2>
+              <p>
+                Tři bloky pod sebou. Kliknutím se blok rozbalí směrem dolů a ukáže detail.
+                (Accordion — vždy je otevřený jen jeden.)
+              </p>
+            </div>
+            <div class="hubActions">
+              <button class="btn" type="button" id="btnCollapseAll" disabled>Sbalit</button>
+              <button class="btn" type="button" data-jump="#end">Na kontakt</button>
+            </div>
+          </header>
+
+          <div class="accordion" id="accordion" aria-label="Sekce profilu">
+            <article class="accItem" data-section="about">
+              <button class="accHead" type="button" aria-expanded="false">
+                <div class="accKicker">
+                  <span class="badge"><span class="icon"></span> BIO</span>
+                  <span class="accKickerText">krátce a věcně</span>
+                </div>
+                <div class="accTitleRow">
+                  <h3>O mně</h3>
+                  <span class="accChevron" aria-hidden="true"></span>
+                </div>
+                <p class="accSummary">Kdo jsem, jaký mám fokus, co mě baví a na čem stavím.</p>
+              </button>
+              <div class="accBody" aria-hidden="true">
+                <div class="accBodyInner" data-slot="content"></div>
+              </div>
+            </article>
+
+            <article class="accItem" data-section="teaching">
+              <button class="accHead" type="button" aria-expanded="false">
+                <div class="accKicker">
+                  <span class="badge"><span class="icon icon--2"></span> EDU</span>
+                  <span class="accKickerText">jak učím</span>
+                </div>
+                <div class="accTitleRow">
+                  <h3>Výuka</h3>
+                  <span class="accChevron" aria-hidden="true"></span>
+                </div>
+                <p class="accSummary">Výukové materiály, metodika, témata (Python, web, grafika…).</p>
+              </button>
+              <div class="accBody" aria-hidden="true">
+                <div class="accBodyInner" data-slot="content"></div>
+              </div>
+            </article>
+
+            <article class="accItem" data-section="projects">
+              <button class="accHead" type="button" aria-expanded="false">
+                <div class="accKicker">
+                  <span class="badge"><span class="icon icon--3"></span> DEV</span>
+                  <span class="accKickerText">co jsem postavil</span>
+                </div>
+                <div class="accTitleRow">
+                  <h3>Projekty</h3>
+                  <span class="accChevron" aria-hidden="true"></span>
+                </div>
+                <p class="accSummary">Weby, hry, prototypy, nástroje – výběr toho nejrelevantnějšího.</p>
+              </button>
+              <div class="accBody" aria-hidden="true">
+                <div class="accBodyInner" data-slot="content"></div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Hidden detail contents (edit freely) -->
+          <template id="tpl-about">
+            <div class="detailBlock">
+              <h4>Rychlý profil</h4>
+              <ul>
+                <li><b>Zaměření:</b> web / výuka / kreativní projekty</li>
+                <li><b>Silné stránky:</b> návrh systémů, UI layout, tvorba materiálů</li>
+                <li><b>Cíl:</b> stručné portfolio pro přijímačky</li>
+              </ul>
+            </div>
+            <div class="detailBlock">
+              <h4>Rychlé odkazy</h4>
+              <ul>
+                <li>Portfolio / GitHub / Behance (doplň)</li>
+                <li>Instagram (doplň)</li>
+                <li>CV PDF (doplň)</li>
+              </ul>
+            </div>
+          </template>
+
+          <template id="tpl-teaching">
+            <div class="detailBlock">
+              <h4>Jak učím</h4>
+              <ul>
+                <li>krok za krokem, důraz na pochopení</li>
+                <li>praktické úkoly + mini-projekty</li>
+                <li>konzistentní šablony výstupů</li>
+              </ul>
+            </div>
+            <div class="detailBlock">
+              <h4>Témata</h4>
+              <ul>
+                <li>Python (if/while/for, funkce, data)</li>
+                <li>Web (HTML/CSS/JS – UI, layout, interakce)</li>
+                <li>Grafika (PhotoPea/Adobe workflow, export)</li>
+              </ul>
+            </div>
+          </template>
+
+          <template id="tpl-projects">
+            <div class="detailBlock">
+              <h4>Výběr projektů</h4>
+              <ul>
+                <li><b>Projekt A:</b> popis + role + stack + odkaz</li>
+                <li><b>Projekt B:</b> popis + role + stack + odkaz</li>
+                <li><b>Projekt C:</b> popis + role + stack + odkaz</li>
+              </ul>
+            </div>
+            <div class="detailBlock">
+              <h4>Technologie</h4>
+              <p>HTML / CSS / JS, případně Unity / Blender (doplň jen relevantní).</p>
+            </div>
+          </template>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =========================
+         SECTION 3: END / FOOTER
+         ========================= -->
+    <section id="end" class="section section--end" aria-label="Kontakt a patička">
+      <div class="container">
+        <footer class="footerCard glass reveal" id="siteFooter">
+          <h3>Kontakt</h3>
+          <p>
+            Pozadí zůstává fixované (nehýbe se) a při přepnutí sekce obsah jemně „doběhne“ (lehké zpoždění).
+          </p>
+
+          <div class="cols">
+            <div>
+              <div class="kv">
+                <div><b>Jméno:</b> Jan Konrád</div>
+                <div><b>E-mail:</b> <a href="mailto:jan@example.com">jan@example.com</a></div>
+                <div><b>Město:</b> (doplň)</div>
+              </div>
+
+              <div class="footerActions">
+                <a class="btn" href="mailto:jan@example.com">Napsat e-mail</a>
+                <a class="btn" href="#" target="_blank" rel="noopener">GitHub / Portfolio</a>
+              </div>
+            </div>
+
+            <div>
+              <div class="detailBlock detailBlock--tight">
+                <h4>Credits</h4>
+                <p>Web vytvořen: <b>Jan Konrád</b> • Layout: vanilla HTML/CSS/JS • (doplň datum/verzi)</p>
+              </div>
+              <p class="muted">Tip: pro VŠ fungují 2–3 nejlepší ukázky + 1 věta „moje role / výsledek / stack“.</p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>

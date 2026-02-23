@@ -1,196 +1,327 @@
-    (() => {
-      "use strict";
+(() => {
+  "use strict";
 
-      const $ = (sel, root=document) => root.querySelector(sel);
-      const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-      const intro = $("#intro");
-      const hub = $("#hub");
-      const hubLayout = $("#hubLayout");
-      const cards = $$(".card", hubLayout);
-      const btnClose = $("#btnClose");
-      const btnBack = $("#btnBack");
+  const intro = $("#intro");
+  const hub = $("#hub");
+  const end = $("#end");
 
-      const detailTitle = $("#detailTitle");
-      const detailSubtitle = $("#detailSubtitle");
-      const detailContent = $("#detailContent");
+  const sections = [intro, hub, end].filter(Boolean);
 
-      const footer = $("#siteFooter");
+  const footer = $("#siteFooter");
 
-      let activeSection = null;
-      let introAutoJumped = false;
+  const accordion = $("#accordion");
+  const items = accordion ? $$(".accItem", accordion) : [];
 
-      /* -------------------------
-         Smooth jump helper
-      ------------------------- */
-      function jumpTo(selector){
-        const el = $(selector);
-        if (!el) return;
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
+  const btnCollapseAll = $("#btnCollapseAll");
+
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // 1 wheel = 1 sekce (designerský dojem)
+  const LOCK_MS = prefersReduced ? 0 : 850;
+  let lockUntil = 0;
+
+  function now() { return Date.now(); }
+  function locked() { return now() < lockUntil; }
+  function lock() { lockUntil = now() + LOCK_MS; }
+
+  function scrollToEl(el) {
+    if (!el) return;
+    el.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "start" });
+    lock();
+
+    // když míříme na konec, patička má "vyjet hned" (ne čekat na IO threshold)
+    if (el === end) {
+      setTimeout(() => footer?.classList.add("is-visible"), prefersReduced ? 0 : 120);
+    }
+  }
+
+  function jumpTo(selector) {
+    const el = $(selector);
+    if (el) scrollToEl(el);
+  }
+
+  /* ---------------------------------
+     Jump links
+  --------------------------------- */
+  function setupJumpLinks() {
+    $$('[data-jump]').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        const target = el.getAttribute('data-jump');
+        if (!target) return;
+        e.preventDefault();
+        jumpTo(target);
+      });
+
+      el.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const target = el.getAttribute('data-jump');
+        if (!target) return;
+        e.preventDefault();
+        jumpTo(target);
+      });
+    });
+  }
+
+  /* ---------------------------------
+     Section detection
+  --------------------------------- */
+  function visibleRatio(el) {
+    const r = el.getBoundingClientRect();
+    const vh = window.innerHeight || 1;
+    const visible = Math.min(vh, r.bottom) - Math.max(0, r.top);
+    return Math.max(0, visible) / Math.max(1, r.height);
+  }
+
+  function currentSectionIndex() {
+    let best = 0;
+    let bestScore = -1;
+    for (let i = 0; i < sections.length; i++) {
+      const s = sections[i];
+      const score = visibleRatio(s);
+      if (score > bestScore) {
+        bestScore = score;
+        best = i;
+      }
+    }
+    return best;
+  }
+
+  /* ---------------------------------
+     Allow scroll INSIDE scrollable blocks
+     (kdyby sis dal do accordionu dlouhý text)
+  --------------------------------- */
+  function findScrollable(startEl) {
+    let el = startEl;
+    while (el && el !== document.body) {
+      const cs = window.getComputedStyle(el);
+      const oy = cs.overflowY;
+      const isScrollable = (oy === 'auto' || oy === 'scroll') && (el.scrollHeight > el.clientHeight + 2);
+      if (isScrollable) return el;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  function shouldLetScrollInside(target, deltaY) {
+    const sc = findScrollable(target);
+    if (!sc) return false;
+    if (deltaY > 0) return sc.scrollTop + sc.clientHeight < sc.scrollHeight - 2;
+    if (deltaY < 0) return sc.scrollTop > 1;
+    return false;
+  }
+
+  /* ---------------------------------
+     Wheel snap assist (robust)
+  --------------------------------- */
+  function setupWheelSnap() {
+    window.addEventListener('wheel', (e) => {
+      const dy = e.deltaY;
+
+      // ignoruj mikro-pohyb trackpadu
+      if (Math.abs(dy) < 6) return;
+
+      // když už probíhá animace, sežer wheel
+      if (locked()) {
+        e.preventDefault();
+        return;
       }
 
-      /* -------------------------
-         INTRO: first scroll -> jump to HUB
-      ------------------------- */
-      function setupIntroAutoJump(){
-        // Click cues
-        $$("[data-jump]").forEach(el => {
-          el.addEventListener("click", (e) => {
-            const target = el.getAttribute("data-jump");
-            if (target) jumpTo(target);
-          });
-          // Allow Enter key for the scrollCue div
-          el.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              const target = el.getAttribute("data-jump");
-              if (target) jumpTo(target);
-            }
-          });
-        });
+      // když user scrolluje uvnitř scrollovatelného bloku (např. dlouhý detail), nech ho
+      if (shouldLetScrollInside(e.target, dy)) return;
 
-        // Wheel / touch intent on intro => jump once
-        function tryAutoJump(deltaY){
-          if (introAutoJumped) return;
-          if (deltaY <= 0) return;
-          introAutoJumped = true;
-          jumpTo("#hub");
-        }
+      const idx = currentSectionIndex();
+      const next = sections[idx + 1] || null;
+      const prev = sections[idx - 1] || null;
 
-        intro.addEventListener("wheel", (e) => {
-          // Only when intro is mostly visible
-          const r = intro.getBoundingClientRect();
-          const mostlyOnScreen = r.top >= -20 && r.top <= 20;
-          if (!mostlyOnScreen) return;
-          tryAutoJump(e.deltaY);
-        }, { passive: true });
-
-        // Touch swipe
-        let touchY = null;
-        intro.addEventListener("touchstart", (e) => {
-          touchY = e.touches?.[0]?.clientY ?? null;
-        }, { passive: true });
-        intro.addEventListener("touchmove", (e) => {
-          if (touchY == null) return;
-          const y = e.touches?.[0]?.clientY ?? touchY;
-          const dy = touchY - y;
-          if (dy > 18) tryAutoJump(1);
-        }, { passive: true });
+      // 1 scroll = 1 sekce
+      if (dy > 0 && next) {
+        e.preventDefault();
+        scrollToEl(next);
+        return;
       }
-
-      /* -------------------------
-         HUB: expand/collapse logic
-      ------------------------- */
-      function setMode(mode){
-        hubLayout.setAttribute("data-mode", mode);
-        const isDetail = mode === "detail";
-        btnClose.setAttribute("aria-disabled", String(!isDetail));
-        btnClose.disabled = !isDetail;
+      if (dy < 0 && prev) {
+        e.preventDefault();
+        scrollToEl(prev);
+        return;
       }
+    }, { passive: false });
+  }
 
-      function clearActive(){
-        cards.forEach(c => {
-          c.classList.remove("is-active");
-          const btn = $(".card__btn", c);
-          if (btn) btn.setAttribute("aria-expanded", "false");
-        });
-        activeSection = null;
-        detailTitle.textContent = "Detail";
-        detailSubtitle.textContent = "Vyber sekci vlevo.";
-        detailContent.innerHTML = "";
-        setMode("grid");
-        // clear hash if it matches our sections
-        if (location.hash && ["#about","#teaching","#projects"].includes(location.hash)){
-          history.replaceState(null, "", "#hub");
-        }
-      }
+  /* ---------------------------------
+     Touch snap (mobil)
+  --------------------------------- */
+  function setupTouchSnap() {
+    let startY = null;
 
-      function activate(section){
-        const card = cards.find(c => c.dataset.section === section);
-        if (!card) return;
+    window.addEventListener('touchstart', (e) => {
+      startY = e.touches?.[0]?.clientY ?? null;
+    }, { passive: true });
 
-        // Toggle: if same active -> close
-        if (activeSection === section){
-          clearActive();
-          return;
-        }
+    window.addEventListener('touchend', (e) => {
+      if (startY == null) return;
+      if (locked()) return;
 
-        activeSection = section;
+      const endY = e.changedTouches?.[0]?.clientY ?? startY;
+      const dy = startY - endY;
+      startY = null;
 
-        cards.forEach(c => {
-          const isActive = c === card;
-          c.classList.toggle("is-active", isActive);
-          const btn = $(".card__btn", c);
-          if (btn) btn.setAttribute("aria-expanded", String(isActive));
-        });
+      if (Math.abs(dy) < 22) return;
 
-        // Fill panel from template
-        const tpl = $(`#tpl-${section}`);
-        detailContent.innerHTML = "";
-        if (tpl && tpl.content){
-          detailContent.appendChild(tpl.content.cloneNode(true));
-        }
+      const idx = currentSectionIndex();
+      const next = sections[idx + 1] || null;
+      const prev = sections[idx - 1] || null;
 
-        const titles = {
-          about:   { t: "O mně",   s: "Profil, záběr a rychlé odkazy" },
-          teaching:{ t: "Výuka",   s: "Metodika, témata, ukázky materiálů" },
-          projects:{ t: "Projekty",s: "Výběr projektů + stack + přínos" }
-        };
-        detailTitle.textContent = titles[section]?.t ?? "Detail";
-        detailSubtitle.textContent = titles[section]?.s ?? "";
+      if (dy > 0 && next) scrollToEl(next);
+      if (dy < 0 && prev) scrollToEl(prev);
+    }, { passive: true });
+  }
 
-        setMode("detail");
+  /* ---------------------------------
+     Accordion (3 bloky pod sebou)
+  --------------------------------- */
+  function updateCollapseBtn() {
+    if (!btnCollapseAll) return;
+    const anyOpen = items.some(i => i.classList.contains('is-open'));
+    btnCollapseAll.disabled = !anyOpen;
+  }
 
-        // Optional: keep deep link
-        history.replaceState(null, "", `#${section}`);
-      }
+  function fillContent(item) {
+    const section = item.dataset.section;
+    const slot = $('[data-slot="content"]', item);
+    if (!slot || slot.dataset.filled === '1') return;
 
-      function setupHub(){
-        cards.forEach(card => {
-          const section = card.dataset.section;
-          const btn = $(".card__btn", card);
-          btn.addEventListener("click", () => activate(section));
-        });
+    const tpl = document.getElementById(`tpl-${section}`);
+    if (tpl?.content) {
+      slot.appendChild(tpl.content.cloneNode(true));
+      slot.dataset.filled = '1';
+    }
+  }
 
-        btnBack.addEventListener("click", clearActive);
-        btnClose.addEventListener("click", clearActive);
+  function openItem(item) {
+    if (!item) return;
 
-        // ESC closes
-        window.addEventListener("keydown", (e) => {
-          if (e.key === "Escape" && hubLayout.getAttribute("data-mode") === "detail"){
-            clearActive();
-          }
-        });
+    // close others (accordion)
+    items.forEach((it) => {
+      if (it !== item) closeItem(it);
+    });
 
-        // Open via hash
-        function openFromHash(){
-          const h = (location.hash || "").replace("#", "");
-          if (["about","teaching","projects"].includes(h)){
-            // Ensure hub is visible then activate
-            $("#hub").scrollIntoView({ behavior: "smooth", block: "start" });
-            // small delay so it feels natural
-            setTimeout(() => activate(h), 220);
-          }
-        }
-        window.addEventListener("hashchange", openFromHash);
-        openFromHash();
-      }
+    fillContent(item);
 
-      /* -------------------------
-         Footer reveal animation
-      ------------------------- */
-      function setupFooterReveal(){
-        const io = new IntersectionObserver((entries) => {
-          entries.forEach(en => {
-            if (en.isIntersecting){
-              footer.classList.add("is-visible");
-            }
-          });
-        }, { threshold: 0.25 });
-        io.observe(footer);
-      }
+    const head = $('.accHead', item);
+    const body = $('.accBody', item);
+    if (!head || !body) return;
 
-      /* init */
-      setupIntroAutoJump();
-      setupHub();
-      setupFooterReveal();
-    })();
+    item.classList.add('is-open');
+    head.setAttribute('aria-expanded', 'true');
+    body.setAttribute('aria-hidden', 'false');
+
+    // max-height animace
+    body.style.maxHeight = '0px';
+    // force reflow
+    body.offsetHeight;
+    body.style.maxHeight = body.scrollHeight + 'px';
+
+    // po rozbalení nastav maxHeight na 'none' (ať to není useknuté, když něco změníš)
+    const onEnd = (ev) => {
+      if (ev.propertyName !== 'max-height') return;
+      if (!item.classList.contains('is-open')) return;
+      body.style.maxHeight = 'none';
+      body.removeEventListener('transitionend', onEnd);
+    };
+    body.addEventListener('transitionend', onEnd);
+
+    updateCollapseBtn();
+  }
+
+  function closeItem(item) {
+    if (!item || !item.classList.contains('is-open')) return;
+
+    const head = $('.accHead', item);
+    const body = $('.accBody', item);
+    if (!head || !body) return;
+
+    // když je maxHeight none, přepočítej na konkrétní px
+    body.style.maxHeight = body.scrollHeight + 'px';
+    body.offsetHeight;
+
+    item.classList.remove('is-open');
+    head.setAttribute('aria-expanded', 'false');
+    body.setAttribute('aria-hidden', 'true');
+    body.style.maxHeight = '0px';
+
+    updateCollapseBtn();
+  }
+
+  function collapseAll() {
+    items.forEach(closeItem);
+    updateCollapseBtn();
+  }
+
+  function setupAccordion() {
+    if (!accordion) return;
+
+    items.forEach((item) => {
+      const head = $('.accHead', item);
+      if (!head) return;
+
+      head.addEventListener('click', () => {
+        const isOpen = item.classList.contains('is-open');
+        if (isOpen) closeItem(item);
+        else openItem(item);
+      });
+    });
+
+    btnCollapseAll?.addEventListener('click', collapseAll);
+
+    // hash deep link
+    const h = (location.hash || '').replace('#', '');
+    if ([ 'about', 'teaching', 'projects' ].includes(h)) {
+      scrollToEl(hub);
+      setTimeout(() => {
+        const targetItem = items.find(i => i.dataset.section === h);
+        if (targetItem) openItem(targetItem);
+      }, prefersReduced ? 0 : 180);
+    }
+
+    // ESC sbalí
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') collapseAll();
+    });
+
+    updateCollapseBtn();
+  }
+
+  /* ---------------------------------
+     Footer reveal (vyjede hned)
+  --------------------------------- */
+  function setupFooterReveal() {
+    if (!footer) return;
+
+    const show = () => footer.classList.add('is-visible');
+
+    // hned při startu, pokud už je na obrazovce
+    if (visibleRatio(end) > 0.05) show();
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) show();
+      });
+    }, {
+      threshold: 0.01,
+      // trigger dřív než je footer "napůl"
+      rootMargin: '0px 0px -30% 0px'
+    });
+
+    io.observe(footer);
+  }
+
+  /* init */
+  setupJumpLinks();
+  setupAccordion();
+  setupWheelSnap();
+  setupTouchSnap();
+  setupFooterReveal();
+})();
