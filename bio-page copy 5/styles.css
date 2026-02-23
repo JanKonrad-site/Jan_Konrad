@@ -1,6 +1,115 @@
-/* =========================
-   CSS VARIABLES (edit here)
-   ========================= */
+/* ... nechávám zbytek tvého CSS beze změny ... */
+
+/* NAV ROW (v úvodu vedle sebe) */
+.navRow{
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+/* NAV BUTTONS – jako scrollCue, bez textu, jen šipka */
+.navBtn{
+  --size: 46px;
+  --rot: 45deg;
+
+  width: var(--size);
+  height: var(--size);
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: rgba(0,0,0,0.22);
+  color: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  user-select: none;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  transition: transform var(--t) var(--ease), background var(--t) var(--ease), border-color var(--t) var(--ease);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+
+  animation: navBreathe 1.9s var(--ease) infinite;
+}
+
+.navBtn::after{
+  content:"";
+  width: 11px;
+  height: 11px;
+  border-right: 2px solid rgba(255,255,255,0.65);
+  border-bottom: 2px solid rgba(255,255,255,0.65);
+  transform: rotate(var(--rot));
+}
+
+.navBtn--down{ --rot: 45deg; }
+.navBtn--up{ --rot: 225deg; }
+
+.navBtn--large{ --size: 54px; }
+
+.navBtn--double{
+  position: relative;
+}
+.navBtn--double::before{
+  content:"";
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border-right: 2px solid rgba(255,255,255,0.45);
+  border-bottom: 2px solid rgba(255,255,255,0.45);
+  transform: rotate(var(--rot)) translate(-4px, -4px);
+  opacity: 0.9;
+}
+
+.navBtn:hover{
+  animation: none;
+  transform: translateY(-1px) scale(1.05);
+  background: rgba(0,0,0,0.28);
+  border-color: rgba(255,255,255,0.18);
+}
+
+.navBtn:active{
+  transform: translateY(0) scale(1.02);
+}
+
+.navBtn:focus-visible{
+  outline: 2px solid rgba(139,211,255,0.55);
+  outline-offset: 4px;
+}
+
+.navBtn:disabled{
+  opacity: 0.45;
+  cursor: not-allowed;
+  animation: none;
+}
+
+@keyframes navBreathe{
+  0%,100%{ transform: scale(1); }
+  50%{ transform: scale(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .navBtn{ animation: none; }
+}
+
+/* Drobnost: intro “velká šipka” dole */
+#intro .container{
+  position: relative;
+}
+#intro .navBtn--large{
+  margin: 16px auto 0;
+  display: grid;
+}
+
+/* Hub actions – ikony vedle sebe */
+.hubActions{
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+}
 :root{
   --bg: #0b0d12;
   --panel: rgba(255,255,255,0.06);
@@ -37,12 +146,9 @@
   html{ scroll-behavior: auto; }
 }
 
-/* =========================
-   BASE
-   ========================= */
 *{ box-sizing: border-box; }
 html, body{ height: 100%; }
-html{ scroll-behavior: smooth; scroll-snap-type: y mandatory; }
+html{ scroll-behavior: smooth; /* scroll-snap vypnuto */ }
 
 body{
   margin: 0;
@@ -52,7 +158,7 @@ body{
   background: var(--bg);
 }
 
-/* FIXED BACKGROUND (nehýbe se) */
+/* FIXED BACKGROUND */
 body::before{
   content:"";
   position: fixed;
@@ -64,8 +170,6 @@ body::before{
     radial-gradient(900px 700px at 80% 20%, rgba(181,255,163,0.08), transparent 52%),
     var(--bg);
 }
-
-/* jemný “film grain” */
 body::after{
   content:"";
   position: fixed;
@@ -83,17 +187,14 @@ body::after{
 }
 
 a{ color: inherit; text-decoration: none; }
-
 .page{ min-height: 100%; }
 
 .section{
-  scroll-snap-align: start;
   min-height: 100vh;
   position: relative;
   padding: var(--pad);
 }
 
-/* Intro centrované, hub/end přirozený flow */
 #intro{ display: grid; place-items: center; }
 #hub, #end{ display: block; }
 
@@ -112,7 +213,6 @@ a{ color: inherit; text-decoration: none; }
   overflow: hidden;
   position: relative;
 }
-
 .glass::before{
   content:"";
   position: absolute;
@@ -152,9 +252,7 @@ section.is-shown .reveal{
 .btn:focus-visible{ outline: 2px solid rgba(139,211,255,0.55); outline-offset: 3px; }
 .btn:disabled{ opacity: 0.55; cursor: not-allowed; }
 
-/* =========================
-   HERO
-   ========================= */
+/* HERO */
 .hero{
   width: min(var(--container), 100%);
   display: grid;
@@ -163,7 +261,6 @@ section.is-shown .reveal{
   align-items: center;
   padding: clamp(18px, 3vw, 34px);
 }
-
 .hero__text h1{
   margin: 0 0 12px;
   font-size: var(--h1);
@@ -176,14 +273,12 @@ section.is-shown .reveal{
   color: var(--muted);
   max-width: 60ch;
 }
-
 .hero__meta{
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
 }
-
 .pill{
   display: inline-flex;
   gap: 8px;
@@ -201,20 +296,17 @@ section.is-shown .reveal{
   background: var(--accent);
   box-shadow: 0 0 0 4px rgba(139,211,255,0.14);
 }
-
 .hero__actions{
   margin-top: 18px;
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
-
 .hero__photo{
   display: grid;
   gap: 12px;
   justify-items: end;
 }
-
 .photoFrame{
   width: min(360px, 100%);
   aspect-ratio: 4 / 5;
@@ -225,9 +317,7 @@ section.is-shown .reveal{
     radial-gradient(500px 400px at 30% 30%, rgba(139,211,255,0.15), transparent 60%),
     rgba(255,255,255,0.04);
   overflow: hidden;
-  position: relative;
 }
-
 .photoFrame img{
   width: 100%;
   height: 100%;
@@ -235,18 +325,11 @@ section.is-shown .reveal{
   display: block;
   opacity: 0.95;
 }
-
-.photoHint{
-  font-size: 13px;
-  color: var(--muted);
-  text-align: right;
-}
+.photoHint{ font-size: 13px; color: var(--muted); text-align: right; }
 
 .scrollCue{
-  position: absolute;
-  left: 50%;
-  bottom: 18px;
-  transform: translateX(-50%);
+  margin: 16px auto 0;
+  width: fit-content;
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -261,7 +344,7 @@ section.is-shown .reveal{
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
-.scrollCue:hover{ transform: translateX(-50%) translateY(-1px); background: rgba(0,0,0,0.28); }
+.scrollCue:hover{ transform: translateY(-1px); background: rgba(0,0,0,0.28); }
 
 .chev{
   width: 10px; height: 10px;
@@ -281,11 +364,8 @@ section.is-shown .reveal{
   .photoHint{ text-align: left; }
 }
 
-/* =========================
-   HUB + ACCORDION
-   ========================= */
+/* HUB + ACCORDION */
 .hubCard{ padding: clamp(14px, 2.2vw, 22px); }
-
 .hubHeader{
   display: flex;
   justify-content: space-between;
@@ -293,7 +373,6 @@ section.is-shown .reveal{
   gap: 14px;
   margin-bottom: 16px;
 }
-
 .hubHeader h2{
   margin: 0;
   font-size: var(--h2);
@@ -305,34 +384,25 @@ section.is-shown .reveal{
   font-size: var(--p);
   max-width: 70ch;
 }
-
 .hubActions{
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
   justify-content: flex-end;
 }
-
-.accordion{
-  display: grid;
-  gap: var(--gap);
-}
-
+.accordion{ display: grid; gap: var(--gap); }
 .accItem{
   border-radius: var(--radius-xl);
   border: 1px solid var(--stroke);
   background: rgba(255,255,255,0.045);
   overflow: hidden;
   transition: transform var(--t) var(--ease), background var(--t) var(--ease), border-color var(--t) var(--ease);
-  position: relative;
 }
-
 .accItem:hover{
   transform: translateY(-1px);
   background: rgba(255,255,255,0.06);
   border-color: rgba(255,255,255,0.18);
 }
-
 .accHead{
   width: 100%;
   border: 0;
@@ -345,7 +415,6 @@ section.is-shown .reveal{
   display: grid;
   gap: 10px;
 }
-
 .accKicker{
   display: inline-flex;
   gap: 10px;
@@ -353,7 +422,46 @@ section.is-shown .reveal{
   color: var(--muted);
   font-size: 13px;
 }
-.accKickerText{ opacity: 0.95; }
+.accTitleRow{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.accTitleRow h3{
+  margin: 0;
+  font-size: clamp(18px, 2vw, 22px);
+  letter-spacing: -0.01em;
+}
+.accChevron{
+  width: 12px;
+  height: 12px;
+  border-right: 2px solid rgba(255,255,255,0.55);
+  border-bottom: 2px solid rgba(255,255,255,0.55);
+  transform: rotate(45deg);
+  transition: transform var(--t) var(--ease);
+}
+.accSummary{
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--p);
+  line-height: 1.55;
+}
+.accBody{
+  max-height: 0px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    max-height var(--t-slow) var(--ease),
+    opacity var(--t) var(--ease),
+    transform var(--t) var(--ease);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.12);
+}
+.accBodyInner{ padding: 16px 18px 18px; }
+.accItem.is-open .accBody{ opacity: 1; transform: translateY(0); }
+.accItem.is-open .accChevron{ transform: rotate(225deg); }
 
 .badge{
   display: inline-flex;
@@ -367,7 +475,6 @@ section.is-shown .reveal{
   font-size: 13px;
   width: fit-content;
 }
-
 .icon{
   width: 10px; height: 10px;
   border-radius: 3px;
@@ -377,66 +484,7 @@ section.is-shown .reveal{
 .icon--2{ background: var(--accent-2); box-shadow: 0 0 0 4px rgba(181,255,163,0.12); }
 .icon--3{ background: #ffd08b; box-shadow: 0 0 0 4px rgba(255,208,139,0.12); }
 
-.accTitleRow{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-.accTitleRow h3{
-  margin: 0;
-  font-size: clamp(18px, 2vw, 22px);
-  letter-spacing: -0.01em;
-}
-
-.accChevron{
-  width: 12px;
-  height: 12px;
-  border-right: 2px solid rgba(255,255,255,0.55);
-  border-bottom: 2px solid rgba(255,255,255,0.55);
-  transform: rotate(45deg);
-  transition: transform var(--t) var(--ease);
-}
-
-.accSummary{
-  margin: 0;
-  color: var(--muted);
-  font-size: var(--p);
-  line-height: 1.55;
-}
-
-.accBody{
-  max-height: 0px;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(-6px);
-  transition:
-    max-height var(--t-slow) var(--ease),
-    opacity var(--t) var(--ease),
-    transform var(--t) var(--ease);
-  border-top: 1px solid rgba(255,255,255,0.08);
-  background: rgba(0,0,0,0.12);
-}
-
-.accBodyInner{ padding: 16px 18px 18px; }
-
-.accItem.is-open .accBody{ opacity: 1; transform: translateY(0); }
-.accItem.is-open .accChevron{ transform: rotate(225deg); }
-
-/* Sentinel absolutní = žádný gap pod projekty */
-#hub{ position: relative; }
-#endSentinel{
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  pointer-events: none;
-}
-
-/* =========================
-   Detail blocks
-   ========================= */
+/* Detail blocks */
 .detailBlock{
   border: 1px solid rgba(255,255,255,0.10);
   background: rgba(0,0,0,0.16);
@@ -465,9 +513,7 @@ section.is-shown .reveal{
 }
 .detailBlock--tight{ margin: 0; }
 
-/* =========================
-   ABOUT CANVAS (scrollovatelný text)
-   ========================= */
+/* ABOUT CANVAS – flow (bez scroll bar) */
 .aboutCanvas{
   border: 1px solid rgba(255,255,255,0.10);
   background: rgba(255,255,255,0.04);
@@ -475,7 +521,6 @@ section.is-shown .reveal{
   padding: 14px;
   margin: 10px 0 12px;
 }
-
 .aboutCanvas__top{
   display: flex;
   align-items: baseline;
@@ -484,34 +529,14 @@ section.is-shown .reveal{
   flex-wrap: wrap;
   margin-bottom: 10px;
 }
-
 .aboutCanvas__hint{
   font-size: 13px;
   color: var(--muted);
   opacity: 0.9;
 }
-
-.aboutCanvas__scroll{
-  height: clamp(260px, 48vh, 520px);
-  overflow: auto;
-  padding: 12px;
-  border-radius: var(--radius-lg);
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(0,0,0,0.18);
-  scroll-behavior: smooth;
+.aboutCanvas__flow{
+  padding: 2px 0 0;
 }
-.aboutCanvas__scroll:focus{
-  outline: 2px solid rgba(139,211,255,0.35);
-  outline-offset: 4px;
-}
-
-.aboutCanvas__scroll::-webkit-scrollbar{ width: 10px; }
-.aboutCanvas__scroll::-webkit-scrollbar-thumb{
-  background: rgba(255,255,255,0.12);
-  border-radius: 999px;
-  border: 2px solid rgba(0,0,0,0.25);
-}
-
 .aboutCanvas__section{
   border: 1px solid rgba(255,255,255,0.10);
   background: rgba(0,0,0,0.16);
@@ -538,17 +563,13 @@ section.is-shown .reveal{
   line-height: 1.6;
 }
 
-/* =========================
-   LINK CARDS (Výuka / Projekty)
-   ========================= */
+/* LINK CARDS */
 .linkGrid{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--gap);
 }
-
 .linkGrid--compact{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
 @media (max-width: 900px){
   .linkGrid, .linkGrid--compact{ grid-template-columns: 1fr; }
 }
@@ -581,7 +602,6 @@ section.is-shown .reveal{
   background: rgba(255,255,255,0.06);
   border-color: rgba(255,255,255,0.18);
 }
-
 .linkCard__top{
   display: flex;
   align-items: center;
@@ -589,7 +609,6 @@ section.is-shown .reveal{
   gap: 10px;
   position: relative;
 }
-
 .linkCard__arrow{
   width: 12px; height: 12px;
   border-right: 2px solid rgba(255,255,255,0.55);
@@ -597,7 +616,6 @@ section.is-shown .reveal{
   transform: rotate(45deg);
   opacity: 0.9;
 }
-
 .linkCard__title{
   font-size: 16px;
   letter-spacing: -0.01em;
@@ -608,7 +626,6 @@ section.is-shown .reveal{
   color: var(--muted);
   line-height: 1.55;
 }
-
 .linkCard--primary{
   border-color: rgba(181,255,163,0.35);
   background: rgba(181,255,163,0.07);
@@ -618,15 +635,12 @@ section.is-shown .reveal{
   background: rgba(181,255,163,0.09);
 }
 
-/* =========================
-   FOOTER
-   ========================= */
+/* FOOTER */
 .footerCard{
   width: min(900px, 100%);
   padding: clamp(18px, 3vw, 28px);
   margin: 0 auto;
 }
-
 .cols{
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -646,7 +660,6 @@ footer p{
   line-height: 1.6;
   font-size: var(--p);
 }
-
 .kv{
   display: grid;
   gap: 8px;
@@ -655,12 +668,10 @@ footer p{
   font-size: var(--p);
 }
 .kv b{ color: rgba(255,255,255,0.86); font-weight: 600; }
-
 .footerActions{
   margin-top: 14px;
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
-
 .muted{ margin-top: 12px; color: var(--muted); }

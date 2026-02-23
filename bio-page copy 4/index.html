@@ -31,22 +31,22 @@
             </div>
 
             <div class="hero__actions">
-              <button class="btn" type="button" data-jump="#hub">Přejít na profil</button>
+              <button class="btn" type="button" data-jump="#hub">Profil</button>
               <button class="btn" type="button" data-jump="#end">Kontakt</button>
             </div>
           </div>
 
           <div class="hero__photo">
             <figure class="photoFrame">
-              <!-- VYMĚŇ: tvoje fotka -->
               <img src="./assets/profile.jpg" alt="Profilová fotografie" loading="lazy" />
             </figure>
             <div class="photoHint">Foto: ./assets/profile.jpg</div>
           </div>
         </div>
 
-        <div class="scrollCue" role="button" tabindex="0" data-jump="#hub" aria-label="Scroll na další sekci">
-          <span>Scroll ↓</span><span class="chev" aria-hidden="true"></span>
+        <!-- místo “scroll feature” jen čisté tlačítko -->
+        <div class="scrollCue" role="button" tabindex="0" data-jump="#hub" aria-label="Přejít na profil">
+          <span>Profil ↓</span><span class="chev" aria-hidden="true"></span>
         </div>
       </div>
     </section>
@@ -61,13 +61,16 @@
             <div>
               <h2>Profil</h2>
               <p>
-                Tři bloky pod sebou. Kliknutím se blok rozbalí směrem dolů.
-                O mně je „plátno“ se scrollovatelným obsahem. Výuka a Projekty jsou kartičky–odkazy.
+                O mně je otevřené plátno (bez vnitřního scrollbaru).
+                Výuka a Projekty jsou kartičky jako odkazy.
               </p>
             </div>
+
+            <!-- CHYBĚJÍCÍ BUTTONY DOPLNĚNY -->
             <div class="hubActions">
+              <button class="btn" type="button" data-jump="#intro">↑ Úvod</button>
+              <button class="btn" type="button" data-jump="#end">↓ Kontakt</button>
               <button class="btn" type="button" id="btnCollapseAll" disabled>Sbalit vše</button>
-              <button class="btn" type="button" data-jump="#end">Na kontakt</button>
             </div>
           </header>
 
@@ -78,13 +81,13 @@
               <button class="accHead" type="button" aria-expanded="false">
                 <div class="accKicker">
                   <span class="badge"><span class="icon"></span> BIO</span>
-                  <span class="accKickerText">plátno + scroll</span>
+                  <span class="accKickerText">plátno</span>
                 </div>
                 <div class="accTitleRow">
                   <h3>O mně</h3>
                   <span class="accChevron" aria-hidden="true"></span>
                 </div>
-                <p class="accSummary">Delší text jako plátno, které si můžeš posouvat.</p>
+                <p class="accSummary">Delší text jako plátno – scrolluješ stránkou (bez scrollbar boxu).</p>
               </button>
               <div class="accBody" aria-hidden="true">
                 <div class="accBodyInner" data-slot="content"></div>
@@ -102,7 +105,7 @@
                   <h3>Výuka</h3>
                   <span class="accChevron" aria-hidden="true"></span>
                 </div>
-                <p class="accSummary">Kartičky jako odkazy + jeden odkaz na moje skripta.</p>
+                <p class="accSummary">Kartičky jako odkazy + jedna zvýrazněná „Moje skripta“.</p>
               </button>
               <div class="accBody" aria-hidden="true">
                 <div class="accBodyInner" data-slot="content"></div>
@@ -142,14 +145,14 @@
               </ul>
             </div>
 
-            <!-- „Plátno“: scrollovatelný text -->
+            <!-- OTEVŘENÉ PLÁTNO: žádný vnitřní scrollbar -->
             <div class="aboutCanvas" aria-label="Plátno O mně">
               <div class="aboutCanvas__top">
                 <span class="badge"><span class="icon"></span> O mně – plátno</span>
-                <span class="aboutCanvas__hint">Scrolluješ jen tenhle blok (nezpůsobí skok na další sekci)</span>
+                <span class="aboutCanvas__hint">Bez scrollbar boxu – scrolluješ stránkou.</span>
               </div>
 
-              <div class="aboutCanvas__scroll" tabindex="0" aria-label="Scrollovatelný obsah">
+              <div class="aboutCanvas__flow">
                 <div class="aboutCanvas__section">
                   <h5>Co dělám</h5>
                   <p>
@@ -161,7 +164,7 @@
                 <div class="aboutCanvas__section">
                   <h5>Jak přemýšlím</h5>
                   <ul>
-                    <li><b>Design-first:</b> nejdřív layout a flow, pak teprve detaily.</li>
+                    <li><b>Design-first:</b> nejdřív layout a flow, pak detaily.</li>
                     <li><b>Iterace:</b> rychlý prototyp → test → úprava.</li>
                     <li><b>Čistota:</b> jasné komponenty, proměnné v CSS, udržitelnost.</li>
                   </ul>
@@ -170,8 +173,8 @@
                 <div class="aboutCanvas__section">
                   <h5>Proč hry</h5>
                   <p>
-                    Herní systém je skvělé hřiště pro logiku, UX, ekonomiku a balanc. Přesně tohle pak přenáším do výuky:
-                    studenti vidí, že programování má “smysl”, protože něco reálně vzniká.
+                    Herní systém je skvělé hřiště pro logiku, UX, ekonomiku a balanc. Tohle pak přenáším do výuky:
+                    studenti vidí, že programování má smysl, protože něco reálně vzniká.
                   </p>
                 </div>
 
@@ -183,46 +186,14 @@
                     <li>Grafika: PhotoPea/Adobe workflow pro assets a prezentaci</li>
                   </ul>
                 </div>
-
-                <div class="aboutCanvas__section">
-                  <h5>Rychlé odkazy (doplň)</h5>
-                  <div class="linkGrid linkGrid--compact">
-                    <a class="linkCard" href="#" target="_blank" rel="noopener">
-                      <div class="linkCard__top">
-                        <span class="badge"><span class="icon"></span> GitHub</span>
-                        <span class="linkCard__arrow" aria-hidden="true"></span>
-                      </div>
-                      <div class="linkCard__title">Repo / ukázky</div>
-                      <div class="linkCard__desc">Kód, prototypy, materiály.</div>
-                    </a>
-
-                    <a class="linkCard" href="#" target="_blank" rel="noopener">
-                      <div class="linkCard__top">
-                        <span class="badge"><span class="icon icon--2"></span> Portfolio</span>
-                        <span class="linkCard__arrow" aria-hidden="true"></span>
-                      </div>
-                      <div class="linkCard__title">Design / práce</div>
-                      <div class="linkCard__desc">Vybrané práce a vizuál.</div>
-                    </a>
-
-                    <a class="linkCard" href="#" target="_blank" rel="noopener">
-                      <div class="linkCard__top">
-                        <span class="badge"><span class="icon icon--3"></span> CV</span>
-                        <span class="linkCard__arrow" aria-hidden="true"></span>
-                      </div>
-                      <div class="linkCard__title">CV PDF</div>
-                      <div class="linkCard__desc">Jednostránkové CV.</div>
-                    </a>
-                  </div>
-                </div>
               </div>
             </div>
           </template>
 
           <template id="tpl-teaching">
             <div class="detailBlock">
-              <h4>Výuka – rychlý přehled</h4>
-              <p>Kartičky jsou klikací odkazy. Jedna z nich je vyhrazená pro „moje skripta“.</p>
+              <h4>Výuka</h4>
+              <p>Kartičky jsou klikací odkazy. Jedna je vyhrazená pro „Moje skripta“.</p>
             </div>
 
             <div class="linkGrid">
@@ -259,7 +230,7 @@
                   <span class="linkCard__arrow" aria-hidden="true"></span>
                 </div>
                 <div class="linkCard__title">PhotoPea / Adobe</div>
-                <div class="linkCard__desc">Pracovní postupy, export, assets.</div>
+                <div class="linkCard__desc">Workflow, export, assets.</div>
               </a>
             </div>
           </template>
@@ -267,7 +238,7 @@
           <template id="tpl-projects">
             <div class="detailBlock">
               <h4>Projekty</h4>
-              <p>Kartičky jsou odkazy. Doplň si URL a klidně přidej další karty.</p>
+              <p>Kartičky jsou odkazy. Doplň URL a klidně přidej další karty.</p>
             </div>
 
             <div class="linkGrid">
@@ -304,16 +275,13 @@
                   <span class="linkCard__arrow" aria-hidden="true"></span>
                 </div>
                 <div class="linkCard__title">Další projekty</div>
-                <div class="linkCard__desc">Seznam, výběr, ukázky.</div>
+                <div class="linkCard__desc">Seznam / výběr / ukázky.</div>
               </a>
             </div>
           </template>
 
         </div>
       </div>
-
-      <!-- Sentinel absolutně na dně sekce (bez volného místa pod projekty) -->
-      <div id="endSentinel" aria-hidden="true"></div>
     </section>
 
     <!-- =========================
@@ -335,7 +303,8 @@
 
               <div class="footerActions">
                 <a class="btn" href="mailto:jan@example.com">Napsat e-mail</a>
-                <a class="btn" href="#" target="_blank" rel="noopener">GitHub / Portfolio</a>
+                <button class="btn" type="button" data-jump="#hub">Profil</button>
+                <button class="btn" type="button" data-jump="#intro">↑ Úvod</button>
               </div>
             </div>
 

@@ -6,36 +6,17 @@
 
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const intro = $("#intro");
-  const hub = $("#hub");
-  const end = $("#end");
-  const endSentinel = $("#endSentinel");
-  const footer = $("#siteFooter");
-
   const accordion = $("#accordion");
   const accItems = accordion ? $$(".accItem", accordion) : [];
   const btnCollapseAll = $("#btnCollapseAll");
 
-  const LOCK_MS = prefersReduced ? 0 : 850;
-  let lockUntil = 0;
-
-  function now(){ return Date.now(); }
-  function locked(){ return now() < lockUntil; }
-  function lock(){ lockUntil = now() + LOCK_MS; }
-
-  function scrollToEl(el){
-    if (!el) return;
-    el.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "start" });
-    lock();
-
-    if (el === end) {
-      setTimeout(() => footer?.classList.add("is-visible"), prefersReduced ? 0 : 120);
-    }
-  }
-
+  // ---------------------------
+  // Jump links (buttons only)
+  // ---------------------------
   function jumpTo(selector){
     const el = $(selector);
-    if (el) scrollToEl(el);
+    if (!el) return;
+    el.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "start" });
   }
 
   function setupJumpLinks(){
@@ -56,6 +37,9 @@
     });
   }
 
+  // ---------------------------
+  // Reveal (section enters view)
+  // ---------------------------
   function setupReveal(){
     const io = new IntersectionObserver((entries) => {
       for (const en of entries){
@@ -66,84 +50,9 @@
     $$(".section").forEach(sec => io.observe(sec));
   }
 
-  // ---- ochrana: když uživatel scrolluje uvnitř aboutCanvas, nebudeme skákat sekce
-  function findScrollable(startEl){
-    let el = startEl;
-    while (el && el !== document.body){
-      const cs = window.getComputedStyle(el);
-      const oy = cs.overflowY;
-      const isScrollable = (oy === "auto" || oy === "scroll") && (el.scrollHeight > el.clientHeight + 2);
-      if (isScrollable) return el;
-      el = el.parentElement;
-    }
-    return null;
-  }
-
-  function canScrollInDir(scroller, dy){
-    if (!scroller) return false;
-    if (dy > 0) return scroller.scrollTop + scroller.clientHeight < scroller.scrollHeight - 2;
-    if (dy < 0) return scroller.scrollTop > 1;
-    return false;
-  }
-
-  function isMostlyOnScreen(el, ratio = 0.75){
-    if (!el) return false;
-    const r = el.getBoundingClientRect();
-    const vh = window.innerHeight || 1;
-    const visible = Math.min(vh, r.bottom) - Math.max(0, r.top);
-    const rr = Math.max(0, visible) / Math.max(1, r.height);
-    return rr >= ratio;
-  }
-
-  function isNearViewport(el, at = 0.92){
-    if (!el) return false;
-    const r = el.getBoundingClientRect();
-    const vh = window.innerHeight || 1;
-    return r.top <= vh * at;
-  }
-
-  function setupAutoScroll(){
-    window.addEventListener("wheel", (e) => {
-      if (locked()) return;
-
-      const dy = e.deltaY;
-      if (Math.abs(dy) < 6) return;
-
-      const sc = findScrollable(e.target);
-      if (sc && canScrollInDir(sc, dy)) return;
-
-      if (dy > 0 && isMostlyOnScreen(intro, 0.78)){
-        e.preventDefault();
-        scrollToEl(hub);
-        return;
-      }
-
-      if (dy > 0 && isMostlyOnScreen(hub, 0.25) && isNearViewport(endSentinel, 0.92)){
-        e.preventDefault();
-        scrollToEl(end);
-        return;
-      }
-    }, { passive: false });
-
-    let startY = null;
-    window.addEventListener("touchstart", (e) => {
-      startY = e.touches?.[0]?.clientY ?? null;
-    }, { passive: true });
-
-    window.addEventListener("touchend", (e) => {
-      if (startY == null || locked()) return;
-      const endY = e.changedTouches?.[0]?.clientY ?? startY;
-      const dy = startY - endY;
-      startY = null;
-
-      if (Math.abs(dy) < 22) return;
-
-      if (dy > 0 && isMostlyOnScreen(intro, 0.78)) scrollToEl(hub);
-      if (dy > 0 && isMostlyOnScreen(hub, 0.25) && isNearViewport(endSentinel, 0.92)) scrollToEl(end);
-    }, { passive: true });
-  }
-
-  // ---- Accordion
+  // ---------------------------
+  // Accordion
+  // ---------------------------
   function updateCollapseBtn(){
     if (!btnCollapseAll) return;
     const anyOpen = accItems.some(i => i.classList.contains("is-open"));
@@ -165,7 +74,9 @@
   function openItem(item){
     if (!item) return;
 
+    // close others
     accItems.forEach(it => { if (it !== item) closeItem(it); });
+
     fillContent(item);
 
     const head = $(".accHead", item);
@@ -177,7 +88,7 @@
     body.setAttribute("aria-hidden", "false");
 
     body.style.maxHeight = "0px";
-    body.offsetHeight;
+    body.offsetHeight; // reflow
     body.style.maxHeight = body.scrollHeight + "px";
 
     const onEnd = (ev) => {
@@ -230,9 +141,10 @@
 
     btnCollapseAll?.addEventListener("click", collapseAll);
 
+    // hash deep link
     const h = (location.hash || "").replace("#", "");
     if (["about","teaching","projects"].includes(h)){
-      scrollToEl(hub);
+      jumpTo("#hub");
       setTimeout(() => {
         const item = accItems.find(i => i.dataset.section === h);
         if (item) openItem(item);
@@ -246,19 +158,7 @@
     updateCollapseBtn();
   }
 
-  function setupFooterReveal(){
-    if (!footer) return;
-    const io = new IntersectionObserver((entries) => {
-      for (const en of entries){
-        if (en.isIntersecting) footer.classList.add("is-visible");
-      }
-    }, { threshold: 0.08, rootMargin: "0px 0px -30% 0px" });
-    io.observe(footer);
-  }
-
   setupJumpLinks();
   setupReveal();
-  setupAutoScroll();
   setupAccordion();
-  setupFooterReveal();
 })();
