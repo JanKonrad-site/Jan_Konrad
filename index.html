@@ -1,0 +1,1055 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BIO page – Jan Konrád</title>
+  <meta name="description" content="Bio page k přijímačkám na VŠ – profil, výuka, projekty, kontakt." />
+
+  <style>
+    /* =========================
+       CSS VARIABLES (edit here)
+       ========================= */
+    :root{
+      --bg: #0b0d12;
+      --panel: rgba(255,255,255,0.06);
+      --panel-strong: rgba(255,255,255,0.10);
+      --stroke: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.70);
+
+      --accent: #8bd3ff;
+      --accent-2: #b5ffa3;
+
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+
+      --shadow: 0 20px 60px rgba(0,0,0,0.45);
+
+      --container: 1100px;
+      --pad: clamp(16px, 2.6vw, 28px);
+      --gap: clamp(12px, 2vw, 22px);
+
+      /* Hub behavior */
+      --pin-w-desktop: clamp(170px, 18vw, 230px);
+      --pin-h-mobile: 86px;
+
+      /* Typography */
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --h1: clamp(34px, 4.8vw, 56px);
+      --h2: clamp(18px, 2.3vw, 26px);
+      --p: clamp(14px, 1.35vw, 16px);
+
+      /* Motion */
+      --t: 280ms;
+      --t-slow: 520ms;
+      --ease: cubic-bezier(.2,.85,.2,1);
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      :root{ --t: 1ms; --t-slow: 1ms; }
+      html{ scroll-behavior: auto; }
+    }
+
+    /* =========================
+       BASE
+       ========================= */
+    *{ box-sizing: border-box; }
+    html, body{ height: 100%; }
+    html{ scroll-behavior: smooth; }
+    body{
+      margin: 0;
+      font-family: var(--font);
+      background: radial-gradient(1000px 700px at 20% 10%, rgba(139,211,255,0.10), transparent 55%),
+                  radial-gradient(900px 700px at 80% 20%, rgba(181,255,163,0.08), transparent 52%),
+                  var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+
+      /* scroll snap across sections */
+      scroll-snap-type: y mandatory;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    .sr-only{
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border: 0;
+    }
+
+    .page{
+      min-height: 100%;
+    }
+
+    section{
+      scroll-snap-align: start;
+    }
+
+    .container{
+      width: min(var(--container), calc(100% - (var(--pad) * 2)));
+      margin: 0 auto;
+    }
+
+    .glass{
+      background: linear-gradient(180deg, var(--panel), transparent);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .btn{
+      appearance: none;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform var(--t) var(--ease), background var(--t) var(--ease), border-color var(--t) var(--ease);
+      font: inherit;
+      line-height: 1;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.18); }
+    .btn:active{ transform: translateY(0px); }
+    .btn:focus-visible{ outline: 2px solid rgba(139,211,255,0.55); outline-offset: 3px; }
+
+    /* =========================
+       SECTION 1 – INTRO / HERO
+       ========================= */
+    #intro{
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      position: relative;
+      padding: var(--pad);
+    }
+
+    .hero{
+      width: min(var(--container), 100%);
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: var(--gap);
+      align-items: center;
+      padding: clamp(18px, 3vw, 34px);
+    }
+
+    .hero__text h1{
+      margin: 0 0 12px;
+      font-size: var(--h1);
+      letter-spacing: -0.02em;
+      line-height: 1.06;
+    }
+    .hero__text p{
+      margin: 0 0 18px;
+      font-size: var(--p);
+      color: var(--muted);
+      max-width: 60ch;
+    }
+
+    .hero__meta{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill{
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,0.05);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .dot{
+      width: 8px; height: 8px;
+      border-radius: 99px;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(139,211,255,0.14);
+    }
+
+    .hero__photo{
+      display: grid;
+      gap: 12px;
+      justify-items: end;
+    }
+
+    .photoFrame{
+      width: min(360px, 100%);
+      aspect-ratio: 4 / 5;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--stroke);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+        radial-gradient(500px 400px at 30% 30%, rgba(139,211,255,0.15), transparent 60%),
+        rgba(255,255,255,0.04);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .photoFrame img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0.95;
+    }
+
+    .photoHint{
+      font-size: 13px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .scrollCue{
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(0,0,0,0.22);
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+      transition: transform var(--t) var(--ease), background var(--t) var(--ease);
+    }
+    .scrollCue:hover{ transform: translateX(-50%) translateY(-1px); background: rgba(0,0,0,0.28); }
+    .chev{
+      width: 10px; height: 10px;
+      border-right: 2px solid rgba(255,255,255,0.55);
+      border-bottom: 2px solid rgba(255,255,255,0.55);
+      transform: rotate(45deg);
+      animation: bob 1.3s var(--ease) infinite;
+    }
+    @keyframes bob{
+      0%,100%{ transform: rotate(45deg) translate(0,0); }
+      50%{ transform: rotate(45deg) translate(0,2px); }
+    }
+
+    @media (max-width: 900px){
+      .hero{ grid-template-columns: 1fr; }
+      .hero__photo{ justify-items: start; }
+      .photoHint{ text-align: left; }
+    }
+
+    /* =========================
+       SECTION 2 – HUB (3 containers + expand)
+       ========================= */
+    #hub{
+      /* min-height so we can scroll down to reveal footer */
+      min-height: 170vh;
+      position: relative;
+      padding: 0;
+    }
+
+    .hubStage{
+      position: sticky;
+      top: 0;
+      min-height: 100vh;
+      display: grid;
+      align-items: center;
+      padding: var(--pad);
+    }
+
+    .hubCard{
+      padding: clamp(14px, 2.2vw, 22px);
+    }
+
+    .hubHeader{
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .hubHeader h2{
+      margin: 0;
+      font-size: var(--h2);
+      letter-spacing: -0.01em;
+    }
+    .hubHeader p{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: var(--p);
+      max-width: 65ch;
+    }
+
+    .hubActions{
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    /* The interactive area */
+    .hubLayout{
+      display: flex;
+      gap: var(--gap);
+      align-items: stretch;
+      min-height: clamp(520px, 66vh, 720px);
+    }
+
+    /* 3 cards row / column */
+    .cards{
+      flex: 1 1 auto;
+      display: flex;
+      gap: var(--gap);
+      align-items: stretch;
+      transition: gap var(--t) var(--ease);
+    }
+
+    .card{
+      flex: 1 1 0;
+      min-width: 0;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,0.045);
+      overflow: hidden;
+      transition:
+        transform var(--t) var(--ease),
+        opacity var(--t) var(--ease),
+        background var(--t) var(--ease),
+        border-color var(--t) var(--ease),
+        flex var(--t-slow) var(--ease);
+      position: relative;
+    }
+
+    .card:hover{
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .card__btn{
+      width: 100%;
+      height: 100%;
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+      text-align: left;
+      background: transparent;
+      border: 0;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .card__kicker{
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .badge{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(0,0,0,0.14);
+      color: rgba(255,255,255,0.78);
+      font-size: 13px;
+      width: fit-content;
+    }
+
+    .icon{
+      width: 10px; height: 10px;
+      border-radius: 3px;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(139,211,255,0.12);
+    }
+    .icon--2{ background: var(--accent-2); box-shadow: 0 0 0 4px rgba(181,255,163,0.12); }
+    .icon--3{ background: #ffd08b; box-shadow: 0 0 0 4px rgba(255,208,139,0.12); }
+
+    .card h3{
+      margin: 0;
+      font-size: clamp(18px, 2vw, 22px);
+      letter-spacing: -0.01em;
+    }
+    .card p{
+      margin: 0;
+      color: var(--muted);
+      font-size: var(--p);
+      line-height: 1.55;
+    }
+
+    .card__hint{
+      margin-top: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,0.72);
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    .arrow{
+      width: 12px; height: 12px;
+      border-right: 2px solid rgba(255,255,255,0.55);
+      border-top: 2px solid rgba(255,255,255,0.55);
+      transform: rotate(45deg);
+    }
+
+    /* Detail panel (hidden in grid mode) */
+    .detail{
+      flex: 0 0 0;
+      opacity: 0;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,0.045);
+      transition:
+        flex var(--t-slow) var(--ease),
+        opacity var(--t) var(--ease),
+        transform var(--t) var(--ease);
+      transform: translateY(6px);
+    }
+
+    .detail__inner{
+      height: 100%;
+      padding: 18px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 14px;
+    }
+
+    .detail__top{
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .detail__title{
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+    .detail__title strong{
+      font-size: clamp(18px, 2vw, 24px);
+      letter-spacing: -0.01em;
+    }
+    .detail__title span{
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .detail__content{
+      overflow: auto;
+      padding-right: 6px;
+    }
+    .detail__content::-webkit-scrollbar{ width: 10px; }
+    .detail__content::-webkit-scrollbar-thumb{
+      background: rgba(255,255,255,0.12);
+      border-radius: 999px;
+      border: 2px solid rgba(0,0,0,0.2);
+    }
+
+    .detailBlock{
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.16);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .detailBlock h4{
+      margin: 0 0 8px;
+      font-size: 14px;
+      letter-spacing: 0.01em;
+      color: rgba(255,255,255,0.86);
+    }
+    .detailBlock ul{
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: var(--p);
+    }
+    .detailBlock p{
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: var(--p);
+    }
+
+    /* Mode: DETAIL (one pinned, panel open) */
+    .hubLayout[data-mode="detail"] .detail{
+      flex: 1 1 auto;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .hubLayout[data-mode="detail"] .card{
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(0);
+      flex: 0 0 0;
+      border-width: 0;
+    }
+
+    .hubLayout[data-mode="detail"] .card.is-active{
+      opacity: 1;
+      pointer-events: auto;
+      flex: 0 0 var(--pin-w-desktop);
+      border-width: 1px;
+    }
+
+    .hubLayout[data-mode="detail"] .card.is-active:hover{
+      transform: translateY(0);
+    }
+
+    /* Make pinned card look like a "handle" */
+    .hubLayout[data-mode="detail"] .card.is-active .card__btn{
+      padding: 14px;
+      gap: 8px;
+      align-content: start;
+    }
+    .hubLayout[data-mode="detail"] .card.is-active p{
+      display: none;
+    }
+    .hubLayout[data-mode="detail"] .card.is-active .card__hint{
+      margin-top: 10px;
+      opacity: 0.85;
+    }
+
+    /* Mobile behavior */
+    @media (max-width: 900px){
+      .hubLayout{ flex-direction: column; min-height: unset; }
+      .cards{ flex-direction: column; }
+      .card{ flex: 0 0 auto; }
+      .hubLayout[data-mode="detail"] .cards{ gap: 10px; }
+      .hubLayout[data-mode="detail"] .card.is-active{
+        flex: 0 0 auto;
+        height: var(--pin-h-mobile);
+      }
+      .hubLayout[data-mode="detail"] .detail{
+        flex: 1 1 auto;
+        min-height: 56vh;
+      }
+      .hubLayout[data-mode="detail"] .card.is-active p{ display: none; }
+    }
+
+    /* =========================
+       HUB TAIL (footer reveal)
+       ========================= */
+    .hubTail{
+      padding: var(--pad);
+      display: grid;
+      place-items: center;
+      min-height: 90vh;
+    }
+
+    .footerCard{
+      width: min(900px, 100%);
+      padding: clamp(18px, 3vw, 28px);
+      transform: translateY(12px);
+      opacity: 0;
+      transition: transform var(--t-slow) var(--ease), opacity var(--t-slow) var(--ease);
+    }
+
+    .footerCard.is-visible{
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    footer .cols{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap);
+      margin-top: 14px;
+    }
+
+    footer h3{
+      margin: 0;
+      font-size: clamp(18px, 2.1vw, 24px);
+      letter-spacing: -0.01em;
+    }
+    footer p{
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: var(--p);
+    }
+    .kv{
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: var(--p);
+    }
+    .kv b{ color: rgba(255,255,255,0.86); font-weight: 600; }
+
+    @media (max-width: 900px){
+      footer .cols{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page" id="top">
+
+    <!-- =========================
+         SECTION 1: INTRO
+         ========================= -->
+    <section id="intro" aria-label="Úvod">
+      <div class="hero glass">
+        <div class="hero__text">
+          <h1>Jan Konrád</h1>
+          <p>
+            Bio page k přijímačkám na VŠ. Stručně: kdo jsem, čím se zabývám, jak učím a co stavím za projekty.
+            (Design si klidně přepošli do Adobe a jen přepiš proměnné / vyměň obrázky.)
+          </p>
+
+          <div class="hero__meta" aria-label="Rychlé štítky">
+            <span class="pill"><span class="dot"></span> ICT / výuka</span>
+            <span class="pill"><span class="dot" style="background:var(--accent-2); box-shadow:0 0 0 4px rgba(181,255,163,0.14)"></span> Web / hry / grafika</span>
+            <span class="pill"><span class="dot" style="background:#ffd08b; box-shadow:0 0 0 4px rgba(255,208,139,0.14)"></span> Portfolio / projekty</span>
+          </div>
+
+          <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn" type="button" data-jump="#hub">Přejít na profil</button>
+            <a class="btn" href="#kontakt" data-jump="#kontakt">Kontakt</a>
+          </div>
+        </div>
+
+        <div class="hero__photo">
+          <figure class="photoFrame">
+            <!-- VYMĚŇ: tvoje fotka -->
+            <img src="https://images.unsplash.com/photo-1520975661595-6453be3f7070?auto=format&fit=crop&w=900&q=70"
+                 alt="Profilová fotografie (placeholder)" loading="lazy">
+          </figure>
+          <div class="photoHint">Foto/hero je placeholder — vyměň za svůj asset z Adobe.</div>
+        </div>
+      </div>
+
+      <div class="scrollCue" role="button" tabindex="0" data-jump="#hub" aria-label="Scroll na další sekci">
+        <span>Scroll ↓</span><span class="chev" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    <!-- =========================
+         SECTION 2: HUB
+         ========================= -->
+    <section id="hub" aria-label="Profil – O mně, Výuka, Projekty">
+      <div class="hubStage">
+        <div class="container">
+          <div class="hubCard glass">
+            <div class="hubHeader">
+              <div>
+                <h2>Profil</h2>
+                <p>
+                  Vyber jednu z oblastí. Po rozbalení zůstane vybraná sekce jako “pin”
+                  a vedle se otevře detail. Zavřením se vrátíš na 3 kontejnery.
+                </p>
+              </div>
+              <div class="hubActions">
+                <a class="btn" href="#kontakt" data-jump="#kontakt">Na kontakt</a>
+                <button class="btn" type="button" id="btnClose" aria-disabled="true">Zpět na 3 kontejnery</button>
+              </div>
+            </div>
+
+            <div class="hubLayout" data-mode="grid" id="hubLayout">
+              <!-- 3 containers -->
+              <div class="cards" role="list" aria-label="Sekce profilu">
+                <article class="card" role="listitem" data-section="about">
+                  <button class="card__btn" type="button" aria-expanded="false" aria-controls="detailPanel">
+                    <div class="card__kicker">
+                      <span class="badge"><span class="icon"></span> BIO</span>
+                      <span>krátce a věcně</span>
+                    </div>
+                    <h3>O mně</h3>
+                    <p>
+                      Kdo jsem, jaký mám fokus, co mě baví a na čem stavím.
+                    </p>
+                    <div class="card__hint">
+                      <span>Otevřít detail</span><span class="arrow" aria-hidden="true"></span>
+                    </div>
+                  </button>
+                </article>
+
+                <article class="card" role="listitem" data-section="teaching">
+                  <button class="card__btn" type="button" aria-expanded="false" aria-controls="detailPanel">
+                    <div class="card__kicker">
+                      <span class="badge"><span class="icon icon--2"></span> EDU</span>
+                      <span>jak učím</span>
+                    </div>
+                    <h3>Výuka</h3>
+                    <p>
+                      Výukové materiály, metodika, témata (Python, web, grafika…).
+                    </p>
+                    <div class="card__hint">
+                      <span>Otevřít detail</span><span class="arrow" aria-hidden="true"></span>
+                    </div>
+                  </button>
+                </article>
+
+                <article class="card" role="listitem" data-section="projects">
+                  <button class="card__btn" type="button" aria-expanded="false" aria-controls="detailPanel">
+                    <div class="card__kicker">
+                      <span class="badge"><span class="icon icon--3"></span> DEV</span>
+                      <span>co jsem postavil</span>
+                    </div>
+                    <h3>Projekty</h3>
+                    <p>
+                      Weby, hry, prototypy, nástroje – výběr toho nejrelevantnějšího.
+                    </p>
+                    <div class="card__hint">
+                      <span>Otevřít detail</span><span class="arrow" aria-hidden="true"></span>
+                    </div>
+                  </button>
+                </article>
+              </div>
+
+              <!-- Detail panel -->
+              <aside class="detail" id="detailPanel" aria-label="Detail sekce">
+                <div class="detail__inner">
+                  <div class="detail__top">
+                    <div class="detail__title">
+                      <strong id="detailTitle">Detail</strong>
+                      <span id="detailSubtitle">Vyber sekci vlevo.</span>
+                    </div>
+                    <button class="btn" type="button" id="btnBack">Zavřít</button>
+                  </div>
+
+                  <div class="detail__content" id="detailContent">
+                    <!-- JS sem vloží obsah -->
+                  </div>
+                </div>
+              </aside>
+            </div>
+
+            <!-- Hidden detail contents (edit freely) -->
+            <template id="tpl-about">
+              <div class="detailBlock">
+                <h4>Rychlý profil</h4>
+                <ul>
+                  <li><b>Zaměření:</b> web / výuka / kreativní projekty</li>
+                  <li><b>Silné stránky:</b> návrh systémů, UI/UX layout, tvorba materiálů</li>
+                  <li><b>Cíl:</b> přiložit stručné a přehledné portfolio k přijímačkám</li>
+                </ul>
+              </div>
+              <div class="detailBlock">
+                <h4>Co z toho chcete vyčíst (VŠ)</h4>
+                <p>
+                  Stručnost, konzistentní prezentaci, schopnost dotahovat věci do funkčního stavu,
+                  a jasný záběr: výuka + vývoj + grafika.
+                </p>
+              </div>
+              <div class="detailBlock">
+                <h4>Rychlé odkazy</h4>
+                <ul>
+                  <li>Portfolio / GitHub / Behance (doplň)</li>
+                  <li>Instagram (doplň)</li>
+                  <li>CV PDF (doplň)</li>
+                </ul>
+              </div>
+            </template>
+
+            <template id="tpl-teaching">
+              <div class="detailBlock">
+                <h4>Jak učím</h4>
+                <ul>
+                  <li>krok za krokem, důraz na pochopení principů</li>
+                  <li>praktické úkoly + mini-projekty</li>
+                  <li>jasné šablony a konzistence výstupů</li>
+                </ul>
+              </div>
+              <div class="detailBlock">
+                <h4>Témata</h4>
+                <ul>
+                  <li>Python (if/while/for, funkce, práce s daty)</li>
+                  <li>Web (HTML/CSS/JS – UI, layout, interakce)</li>
+                  <li>Grafika (PhotoPea/Adobe workflow, export, příprava podkladů)</li>
+                </ul>
+              </div>
+              <div class="detailBlock">
+                <h4>Ukázky materiálů</h4>
+                <p>
+                  Sem vlož 2–5 odkazů na konkrétní lekce / repozitáře (nejlepší signál pro přijímačky).
+                </p>
+              </div>
+            </template>
+
+            <template id="tpl-projects">
+              <div class="detailBlock">
+                <h4>Výběr projektů</h4>
+                <ul>
+                  <li><b>Projekt A:</b> krátký popis + role + stack + odkaz</li>
+                  <li><b>Projekt B:</b> krátký popis + role + stack + odkaz</li>
+                  <li><b>Projekt C:</b> krátký popis + role + stack + odkaz</li>
+                </ul>
+              </div>
+              <div class="detailBlock">
+                <h4>Co je pro VŠ podstatné</h4>
+                <ul>
+                  <li>samostatná realizace + iterace</li>
+                  <li>funkční prototypy</li>
+                  <li>jasný popis přínosu a rozhodnutí</li>
+                </ul>
+              </div>
+              <div class="detailBlock">
+                <h4>Technologie</h4>
+                <p>HTML / CSS / JS, případně Unity / Blender / další (doplň jen relevantní).</p>
+              </div>
+            </template>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Tail: scroll to reveal footer -->
+      <div class="hubTail" id="kontakt">
+        <footer class="footerCard glass" id="siteFooter" aria-label="Kontakt a patička">
+          <h3>Kontakt</h3>
+          <p>
+            Na konci stránky se odhalí patička. Tady udržuj kontakt ultra stručně – pro přijímačky ideální.
+          </p>
+
+          <div class="cols">
+            <div>
+              <div class="kv">
+                <div><b>Jméno:</b> Jan Konrád</div>
+                <div><b>E-mail:</b> <a href="mailto:jan@example.com">jan@example.com</a></div>
+                <div><b>Město:</b> (doplň)</div>
+              </div>
+              <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+                <a class="btn" href="mailto:jan@example.com">Napsat e-mail</a>
+                <a class="btn" href="#" target="_blank" rel="noopener">GitHub / Portfolio</a>
+              </div>
+            </div>
+
+            <div>
+              <div class="detailBlock" style="margin:0;">
+                <h4>Credits</h4>
+                <p style="margin:0;">
+                  Web vytvořen: <b>Jan Konrád</b> • Layout: vanilla HTML/CSS/JS • (doplň datum / verzi)
+                </p>
+              </div>
+              <p style="margin-top:12px; color:var(--muted);">
+                Tip: pro VŠ je dobré mít 1–2 odkazy na “nejlepší ukázky” + krátký popis role a výsledku.
+              </p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const $ = (sel, root=document) => root.querySelector(sel);
+      const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+      const intro = $("#intro");
+      const hub = $("#hub");
+      const hubLayout = $("#hubLayout");
+      const cards = $$(".card", hubLayout);
+      const btnClose = $("#btnClose");
+      const btnBack = $("#btnBack");
+
+      const detailTitle = $("#detailTitle");
+      const detailSubtitle = $("#detailSubtitle");
+      const detailContent = $("#detailContent");
+
+      const footer = $("#siteFooter");
+
+      let activeSection = null;
+      let introAutoJumped = false;
+
+      /* -------------------------
+         Smooth jump helper
+      ------------------------- */
+      function jumpTo(selector){
+        const el = $(selector);
+        if (!el) return;
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      /* -------------------------
+         INTRO: first scroll -> jump to HUB
+      ------------------------- */
+      function setupIntroAutoJump(){
+        // Click cues
+        $$("[data-jump]").forEach(el => {
+          el.addEventListener("click", (e) => {
+            const target = el.getAttribute("data-jump");
+            if (target) jumpTo(target);
+          });
+          // Allow Enter key for the scrollCue div
+          el.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              const target = el.getAttribute("data-jump");
+              if (target) jumpTo(target);
+            }
+          });
+        });
+
+        // Wheel / touch intent on intro => jump once
+        function tryAutoJump(deltaY){
+          if (introAutoJumped) return;
+          if (deltaY <= 0) return;
+          introAutoJumped = true;
+          jumpTo("#hub");
+        }
+
+        intro.addEventListener("wheel", (e) => {
+          // Only when intro is mostly visible
+          const r = intro.getBoundingClientRect();
+          const mostlyOnScreen = r.top >= -20 && r.top <= 20;
+          if (!mostlyOnScreen) return;
+          tryAutoJump(e.deltaY);
+        }, { passive: true });
+
+        // Touch swipe
+        let touchY = null;
+        intro.addEventListener("touchstart", (e) => {
+          touchY = e.touches?.[0]?.clientY ?? null;
+        }, { passive: true });
+        intro.addEventListener("touchmove", (e) => {
+          if (touchY == null) return;
+          const y = e.touches?.[0]?.clientY ?? touchY;
+          const dy = touchY - y;
+          if (dy > 18) tryAutoJump(1);
+        }, { passive: true });
+      }
+
+      /* -------------------------
+         HUB: expand/collapse logic
+      ------------------------- */
+      function setMode(mode){
+        hubLayout.setAttribute("data-mode", mode);
+        const isDetail = mode === "detail";
+        btnClose.setAttribute("aria-disabled", String(!isDetail));
+        btnClose.disabled = !isDetail;
+      }
+
+      function clearActive(){
+        cards.forEach(c => {
+          c.classList.remove("is-active");
+          const btn = $(".card__btn", c);
+          if (btn) btn.setAttribute("aria-expanded", "false");
+        });
+        activeSection = null;
+        detailTitle.textContent = "Detail";
+        detailSubtitle.textContent = "Vyber sekci vlevo.";
+        detailContent.innerHTML = "";
+        setMode("grid");
+        // clear hash if it matches our sections
+        if (location.hash && ["#about","#teaching","#projects"].includes(location.hash)){
+          history.replaceState(null, "", "#hub");
+        }
+      }
+
+      function activate(section){
+        const card = cards.find(c => c.dataset.section === section);
+        if (!card) return;
+
+        // Toggle: if same active -> close
+        if (activeSection === section){
+          clearActive();
+          return;
+        }
+
+        activeSection = section;
+
+        cards.forEach(c => {
+          const isActive = c === card;
+          c.classList.toggle("is-active", isActive);
+          const btn = $(".card__btn", c);
+          if (btn) btn.setAttribute("aria-expanded", String(isActive));
+        });
+
+        // Fill panel from template
+        const tpl = $(`#tpl-${section}`);
+        detailContent.innerHTML = "";
+        if (tpl && tpl.content){
+          detailContent.appendChild(tpl.content.cloneNode(true));
+        }
+
+        const titles = {
+          about:   { t: "O mně",   s: "Profil, záběr a rychlé odkazy" },
+          teaching:{ t: "Výuka",   s: "Metodika, témata, ukázky materiálů" },
+          projects:{ t: "Projekty",s: "Výběr projektů + stack + přínos" }
+        };
+        detailTitle.textContent = titles[section]?.t ?? "Detail";
+        detailSubtitle.textContent = titles[section]?.s ?? "";
+
+        setMode("detail");
+
+        // Optional: keep deep link
+        history.replaceState(null, "", `#${section}`);
+      }
+
+      function setupHub(){
+        cards.forEach(card => {
+          const section = card.dataset.section;
+          const btn = $(".card__btn", card);
+          btn.addEventListener("click", () => activate(section));
+        });
+
+        btnBack.addEventListener("click", clearActive);
+        btnClose.addEventListener("click", clearActive);
+
+        // ESC closes
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && hubLayout.getAttribute("data-mode") === "detail"){
+            clearActive();
+          }
+        });
+
+        // Open via hash
+        function openFromHash(){
+          const h = (location.hash || "").replace("#", "");
+          if (["about","teaching","projects"].includes(h)){
+            // Ensure hub is visible then activate
+            $("#hub").scrollIntoView({ behavior: "smooth", block: "start" });
+            // small delay so it feels natural
+            setTimeout(() => activate(h), 220);
+          }
+        }
+        window.addEventListener("hashchange", openFromHash);
+        openFromHash();
+      }
+
+      /* -------------------------
+         Footer reveal animation
+      ------------------------- */
+      function setupFooterReveal(){
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(en => {
+            if (en.isIntersecting){
+              footer.classList.add("is-visible");
+            }
+          });
+        }, { threshold: 0.25 });
+        io.observe(footer);
+      }
+
+      /* init */
+      setupIntroAutoJump();
+      setupHub();
+      setupFooterReveal();
+    })();
+  </script>
+</body>
+</html>
